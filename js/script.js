@@ -20,6 +20,26 @@ function start() {
       document.getElementById('today-forecast-more-info').innerHTML = description;
       document.getElementById('icon-weather-container').innerHTML = icon;
       document.getElementById('today-forecast-temp').innerHTML = `${temp}°C`;
+
+      // On récupère la météo pour les 3 jours suivants
+      apiWeather
+      .getThreeDayForecast()
+      .then(function(responsebis){
+          const list = responsebis.data.list;
+          list.forEach(function(element, index)
+          {
+            if(index!=0){
+              const main = (list[index].weather[0].main);
+              const description = list[index].weather[0].description;
+              const icon= apiWeather.getHTMLElementFromIcon(list[index].weather[0].icon);
+              const temp = list[index].temp.day;
+              document.getElementById(`day${(index+1)}-forecast-main`).innerHTML = main;
+              document.getElementById(`day${index+1}-forecast-more-info`).innerHTML = description;
+              document.getElementById(`icon${index+1}-weather-container`).innerHTML = icon;
+              document.getElementById(`day${index+1}-forecast-temp`).innerHTML = `${temp}°C`;
+            }
+          });
+      })
       
     })
     .catch(function(error) {
@@ -28,16 +48,14 @@ function start() {
     });
 }
 
-
-// Fonction appelée lors du click du bouton
-function ask() {
+//la fonction start() avec un nom de ville en entrée
+function start(city_input) {
   // Création de l'objet apiWeather
-  const apiWeather = new API_WEATHER();
-  var nomVille = document.getElementsByTagName("city-input")[0].value;
-  // Appel de la fonction getThreeDayForecast
+  const apiWeather = new API_WEATHER(city_input);
+  // Appel de la fonction fetchTodayForecast
 
   apiWeather
-    .getThreeDayForecast(nomVille)
+    .fetchTodayForecast()
     .then(function(response) {
       // Récupère la donnée d'une API
       const data = response.data;
@@ -53,6 +71,26 @@ function ask() {
       document.getElementById('today-forecast-more-info').innerHTML = description;
       document.getElementById('icon-weather-container').innerHTML = icon;
       document.getElementById('today-forecast-temp').innerHTML = `${temp}°C`;
+
+      // On récupère la météo pour les 3 jours suivants
+      apiWeather
+      .getThreeDayForecast()
+      .then(function(responsebis){
+          const list = responsebis.data.list;
+          list.forEach(function(element, index)
+          {
+            if(index!=0){
+              const main = (list[index].weather[0].main);
+              const description = list[index].weather[0].description;
+              const icon= apiWeather.getHTMLElementFromIcon(list[index].weather[0].icon);
+              const temp = list[index].temp.day;
+              document.getElementById(`day${(index+1)}-forecast-main`).innerHTML = main;
+              document.getElementById(`day${index+1}-forecast-more-info`).innerHTML = description;
+              document.getElementById(`icon${index+1}-weather-container`).innerHTML = icon;
+              document.getElementById(`day${index+1}-forecast-temp`).innerHTML = `${temp}°C`;
+            }
+          });
+      })
       
     })
     .catch(function(error) {
